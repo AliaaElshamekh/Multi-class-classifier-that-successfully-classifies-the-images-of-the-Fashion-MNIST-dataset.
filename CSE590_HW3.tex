@@ -1,0 +1,180 @@
+
+
+\documentclass{article}
+\usepackage{enumitem}
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath,amssymb}
+\usepackage{parskip}
+\usepackage{graphicx}
+\usepackage{lmodern}
+\usepackage{epsfig}
+% Margins
+\usepackage[top=1cm, left=2cm, right=2cm, bottom=2.5cm]{geometry}
+% Colour table cells
+\usepackage[table]{xcolor}
+\usepackage{hyperref}         % hyperlinks
+\usepackage{color}
+% Get larger line spacing in table
+\newcommand{\tablespace}{\\[1.25mm]}
+\newcommand\Tstrut{\rule{0pt}{2.6ex}}         % = `top' strut
+\newcommand\tstrut{\rule{0pt}{2.0ex}}         % = `top' strut
+\newcommand\Bstrut{\rule[-0.9ex]{0pt}{0pt}}   % = `bottom' strut
+% Table float box with bottom caption, box width adjusted to content
+
+
+\usepackage{blindtext}
+\usepackage{float}
+
+\def\a{\boldsymbol{a}}
+\def\b{\boldsymbol{b}}
+\def\c{\boldsymbol{c}}
+\def\d{\boldsymbol{d}}
+\def\f{\boldsymbol{f}}
+\def\g{\boldsymbol{g}}
+\def\h{\boldsymbol{h}}
+\def\j{\boldsymbol{j}}
+\def\s{\boldsymbol{s}}
+\def\t{\boldsymbol{t}}
+\def\u{\boldsymbol{u}}
+\def\v{\boldsymbol{v}}
+\def\w{\boldsymbol{w}}
+\def\x{\boldsymbol{x}}
+\def\y{\boldsymbol{y}}
+\def\z{\boldsymbol{z}}
+\def\A{\boldsymbol{\mathrm{A}}}
+\def\B{\boldsymbol{\mathrm{B}}}
+\def\C{\boldsymbol{\mathrm{C}}}
+\def\D{\boldsymbol{\mathrm{D}}}
+\def\E{\boldsymbol{\mathrm{E}}}
+\def\H{\boldsymbol{\mathrm{H}}}
+\def\I{\boldsymbol{\mathrm{I}}}
+\def\J{\boldsymbol{\mathrm{J}}}
+\def\M{\boldsymbol{\mathrm{M}}}
+\def\O{\boldsymbol{\mathrm{O}}}
+\def\P{\boldsymbol{\mathrm{P}}}
+\def\Q{\boldsymbol{\mathrm{Q}}}
+\def\S{\boldsymbol{\mathrm{S}}}
+\def\T{\boldsymbol{\mathrm{T}}}
+\def\U{\boldsymbol{\mathrm{U}}}
+\def\V{\boldsymbol{\mathrm{V}}}
+\def\X{\boldsymbol{\mathrm{X}}}
+\def\Y{\boldsymbol{\mathrm{Y}}}
+\def\bmu{\boldsymbol{\mu}}
+\def\ep{\boldsymbol{\varepsilon}}
+\def\bet{\boldsymbol{\beta}}
+\def\Sig{\boldsymbol{\Sigma}}
+\def\zeros{\boldsymbol{0}}
+\def\diag{\mathrm{diag}}
+\def\rank{\mathrm{rank}}
+\def\tr{^\top}
+\def\ds{\displaystyle}
+\def\bea{\begin{eqnarray}}
+	\def\nnn{\nonumber}
+	\def\eea{\nnn\end{eqnarray}}
+\def\bpm{\begin{pmatrix}}
+	\def\epm{\end{pmatrix}}
+\def\var{\mbox{var}}
+\def\cov{\mbox{cov}}
+\def\Reals{\mathbb{R}}
+\def\abs{\mbox{abs}}
+\def\sion{\sum_{i=1}^n}
+\def\res{\hat{\varepsilon}}
+\newcommand{\EV}[1]{E\left(#1\right)}
+\newcommand{\trace}[1]{\mathrm{tr}\left(#1\right)}
+
+%%%%%%%%%%%%%%%%%
+%     Title     %
+%%%%%%%%%%%%%%%%%
+\title{CSE 590-04 Homework 3 }
+\author{Aliaa Elshamekh}
+
+
+\begin{document}
+	\maketitle
+	\section{Introduction}
+	Image classification is one of the most fundamental problems in Machine Learning. It is the core foundation for bigger problems such as Computer Vision, Face Recognition System, or Self-driving car. There are many classification models that can be used for this task; however, it is important for student to fully understand the concepts of each model, and how they perform on different dataset.
+	
+	
+	This goal of this project is to build a performant multi-class classifier that successfully classifies the images of the  \textit{Fashion-MNIST} dataset. Comprised of five categories of grayscale images (28 x 28), \textit{the Fashion-MNIST} dataset consists of 10,000 training images and 5,000 test samples which is provided with the assignment.
+	
+	In this project, we will explore and study two classification models and compare their performance on grayscale images.
+	
+	The two classifiers are :
+	\begin{itemize}
+		\item Kernal SVM Classifier.
+		\item Multilayer perceptrons MLPs
+	\end{itemize}
+	
+	When building a machine learning model, the correct data preparation and preprocessing is just as important as creating the classification model itself.Prior to any optimization or training of subsequent classification models, the \textit{Fashion-MNIST} dataset needed to be read in and re-shaped before any additional pre-processing steps were carried out.
+	\begin{figure}[H]
+		\centering
+		\begin{minipage}{0.45\textwidth}
+			\centering
+			\includegraphics[scale=1.2]{labels.PNG}\caption{{\small The five classes available in the data set }}
+			\label{fig:label}
+		\end{minipage}\hfill
+		\begin{minipage}{0.45\textwidth}
+			\centering
+			\includegraphics[scale=0.5]{label_data.PNG}\caption{{\small sample from \textit{Fashion-MNIST} dataset.}}
+			\label{fig:labelData}
+		\end{minipage}
+	\end{figure}
+	In order to prevent over fitting of the model, the dataset can be split into both a Train and Validation datasets.As stated in the assignment , we are going to use 4 fold cross validation ,as by testing the model against the test set,we could avoid the realistic trap of training our model to very successfully fit only the training data, with poor performance capabilities on the unseen test data.
+	
+	For both  classification models built in this homework, a 4 fold cross validation was performed. In other words,  in order to verify the trained models performance and associated hyper-parameters.
+	
+	The \textit{Fashion-MNIST} dataset is available in a (n, 28, 28) 2-dimensional (2d) array where $n$ represents the number of image records in the source data. A 2d array for each pixel in the image can be assumed to make both logical and structural sense to the human eye, but to
+	a linear machine learning algorithm, which is expecting a 1-dimensional (1d) array of input features ($X$), this 2d array is difficult to analyze. As a result, the goal of re-shaping the array was to convert the (n, 28, 28) 2-d array to a vector of 784 pixels for both the Support Vector Machine and Multi-layer Perceptron.
+	
+	We need to shuffle our training data to ensure that we don't miss out any digit in a cross validation fold. , we have  to get uniform samples for cross validation. 
+	
+	No further work was  carried out to rectify any class imbalances that could affect the classification models discussed in this homework , since the classes are balanced.
+	
+	Both classifiers we are using are requiring sort of data normalization in preprocessing. It was asked explicitly to make some experiments using four kind of scaling in data preprocessing :
+	\begin{itemize}
+		\item No Scaling.
+		\item Standard Scaling 
+		\begin{equation*}
+			x_{scaled} = \frac{x - \mu_x}{\sigma_x}
+		\end{equation*}
+		\item Min Max Scaling
+		\begin{equation*}
+			x_{norm} = \frac{x-x_{min}}{x_{max}-x_{min}}
+		\end{equation*}
+		\item Robust Scaling 
+		It scales features using statistics that are robust to outliers. This method removes the median and scales the data in the range between 1st quartile and 3rd quartile. i.e., in between 25th quantile and 75th quantile range. This range is also called an Interquartile range.
+		\begin{equation*}
+			\frac{x_i - Q_1(x)}{Q_3(x) - Q_1(x)}
+		\end{equation*}
+	\end{itemize}
+	
+	\section{Kernal SVM}
+	SVM algorithms use a set of mathematical functions that are defined as the kernel. 
+	
+	The function of kernel is to take data as input and transform it into the rm. Different SVM algorithms use different types of kernel functions. These functions can be different types. For example linear, nonlinear, polynomial, radial basis function (RBF), and sigmoid.
+	Introduce Kernel functions for sequence data, graphs, text, images, as well as vectors. The most used type of kernel function is RBF. Because it has localized and finite response along the entire x-axis.
+	The kernel functions return the inner product between two points in a suitable feature space. Thus by defining a notion of similarity, with little computational cost even in very high-dimensional spaces.
+	
+	Kernel Function is a method used to take data as input and transform into the required form of processing data. “Kernel” is used due to set of mathematical functions used in Support Vector Machine provides the window to manipulate the data. So, Kernel Function generally transforms the training set of data so that a non-linear decision surface is able to transformed to a linear equation in a higher number of dimension spaces. Basically, It returns the inner product between two points in a standard feature dimension.
+	
+	\begin{itemize}
+		\item Standard Kernel Function 
+		\begin{eqnarray*}
+			K ( \bar x) &= 1 , \quad ||\bar x||  \leq 1 \\
+			K(\bar x) &= 0  , \quad o.w	
+		\end{eqnarray*}
+		\item Gaussian Kernel Radial Basis Function (RBF)
+		\begin{equation*}
+			K(x_i,x_j) = e^{-\gamma ||x_i-x_j||^2}  \quad \quad \text{for} \quad \gamma > 0
+		\end{equation*}
+		\item Sigmoid kernel
+		\begin{equation*}
+			K(x,y) = \tanh (\alpha x^Ty + c)
+		\end{equation*}
+	\end{itemize}
+	There are other popular kernals but I just mentioned the kernal I am going to make my experiments on . SVMs are sensitive to the feature scales, as we are gonna see later on
+	
+	
+\end{document}
+
